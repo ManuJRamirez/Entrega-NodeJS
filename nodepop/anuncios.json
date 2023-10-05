@@ -8,11 +8,26 @@
         "tags": [ "lifestyle", "motor"]
     },
     {
-        "nombre": "iPhone 3GS",
+        "nombre": "iPhone 15",
         "venta": false,
-        "precio": 50.00,
-        "foto": "iphone.png",
+        "precio": 750.00,
+        "foto": "iphone.jpg",
         "tags": [ "lifestyle", "mobile"]
-        }
+    }, 
+    
+    {
+        "nombre": "PS5",
+        "venta": true,
+        "precio": 350.00,
+        "foto": "ps5.jpg",
+        "tags": [ "lifestyle", "mobile"]
+    },
+    {
+        "nombre": "Ducati",
+        "venta": true,
+        "precio": 20000.00,
+        "foto": "ducati.jpg",
+        "tags": [ "lifestyle", "motor"]
+    }
     ]
 }

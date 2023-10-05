@@ -1,9 +1,14 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const Anuncio = require('../models/Anuncio');
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+router.get('/', async function(req, res, next) {
+  
+  res.locals.anuncios = await Anuncio.lista();
+
+  res.render('index', { title: 'NodePoP' });
+
 });
 
 module.exports = router;

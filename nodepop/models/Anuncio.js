@@ -14,8 +14,16 @@ const anuncioSchema = mongoose.Schema({
 // Tipos de métodos:
 // - Estatico: método que esta en el modelo (p.e. Agente.lista())
 // - De instancia: metodo que tienen las instancias (p.e. agente.saluda())
+
+anuncioSchema.statics.listaSimple = function() {
+  const query = Anuncio.find(); // devuelve un objeto de tipo query que es un thenable
+  return query.exec();
+}
+
 anuncioSchema.statics.lista = function(filtro, skip, limit, sort, fields) {
   const query = Anuncio.find(filtro); // devuelve un objeto de tipo query que es un thenable
+  //const query = Anuncio.find({precio: { '$gte': '1000' }});
+  console.log(filtro);
   query.skip(skip);
   query.limit(limit);
   query.sort(sort);
