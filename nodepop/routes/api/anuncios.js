@@ -6,35 +6,37 @@ const Anuncio = require('../../models/Anuncio');
 // Devuelve una lista de agentes
 
 /**
- * @openapi
- * /appi/agentes:
+ * @swagger
+ * /api/anuncios:
  *  get:
- *      description: devuelve una lista de agentes
+ *      description: devuelve
  *      responses:
  *        200:
- *          description: Devuelve JSON
+ *          description: Devuelve JSON con todos los anuncios
  */
 
 
 router.get('/', async (req, res, next) =>{
   try{
     const filtroByTag = req.query.tags;
-  
     const filtroByVenta = req.query.venta;
   
     const filtroByPrecio = req.query.precio;
   
     const filtroByNombre = req.query.nombre;
 
-    const skip = req.query.skip;
-    const limite = req.query.limit;
-    const ordenacion = req.query.sort;
-    const agrupacion = req.query.fields;
+    const start = req.query.start;
+    const limit = req.query.limit;
+    const sort = req.query.sort;
+    const fields = req.query.fields;
+   
+
 
     const filtro = {};
     if (filtroByNombre) {
-      filtro.nombre =   {$regex: '.*' + filtroByNombre + '.*' };
+      filtro.nombre = {$regex: '.*' + filtroByNombre + '.*', $options:'i'};
     }
+
     if (filtroByTag) {
       filtro.tags = filtroByTag;
     }
@@ -46,11 +48,6 @@ router.get('/', async (req, res, next) =>{
     if(filtroByPrecio){
       if(!filtroByPrecio.includes('-')){
         filtro.precio = filtroByPrecio;
-      // } else if(filtroByPrecio.charAt(0) === '-') {
-      //    filtro.precio = {$lte: filtroByPrecio.substring(1, filtroByPrecio.length)};
-      // } else if(filtroByPrecio.charAt(filtroByPrecio.length - 1) === '-'){
-      //   console.log({$gte: filtroByPrecio.substring(0, filtroByPrecio.length)});
-      //   filtro.precio = {$gte: filtroByPrecio.substring(0, filtroByPrecio.length - 1 )};
       } else {
         let precioArr = filtroByPrecio.split('-');
         console.log(precioArr);
@@ -63,33 +60,53 @@ router.get('/', async (req, res, next) =>{
         }
       }
     }
-    console.log(filtro.precio);
 
-    // if (filtroByPrecio) {
-    //   if (filtroByPrecio.includes('-')){
-    //     let precioArr = filtroByPrecio.split('-');
-    //     filtro.precio = {};
-    //     if (precioArr[0]){
-    //       filtro.precio['$gte'] = precioArr[0];
-    //     }
-    //     if (precioArr[1]){
-    //       filtro.precio['$lte'] = precioArr[1];
-    //     }
-    //   }else{
-    //     filtro.precio = filtroByPrecio;
-    //   }
-    // }
-
-    const anuncios = await Anuncio.lista(filtro, skip, limite, ordenacion, agrupacion);
-
-    res.json({result: anuncios});
+    const anuncios = await Anuncio.lista(filtro, start, limit, sort, fields);
+    res.locals.anuncios = anuncios; 
+    res.json( {result: anuncios});
+    res.render('index', { title: 'NodePoP' });
+    
   } catch (error) {
       next(error);
   }
 
 });
 
+router.get('/tags/', async (req, res, next) => {
+  try{
+    const tags = await Anuncio.listaTags();
+    res.json({result: tags});
 
+  } catch(error) {
+    next(error);
+  }
+})
+
+router.get('/:foto', function  (req, res, next){
+  try{
+
+    const img = req.params.foto;
+    res.sendFile( __dirname+`../../public/images/${img}` );
+
+  } catch(error) {
+    next(error);
+  }
+})
+
+router.post('/', async (req, res, next) => {
+  try{
+    const datosAnuncio = req.body;
+
+    const nuevoAnuncio = new Anuncio(datosAnuncio);
+
+    const anuncioGuardado = await nuevoAnuncio.save();
+
+    res.json( { result: anuncioGuardado });
+
+  } catch (error) {
+    next(error);
+  }
+});
 
 
 module.exports = router;

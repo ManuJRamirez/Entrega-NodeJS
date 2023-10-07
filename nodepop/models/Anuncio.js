@@ -8,6 +8,7 @@ const anuncioSchema = mongoose.Schema({
   foto: {type: String},
   tags: [{type: String }]
 }, {
+  //collation: { locale: 'es', strength: 2 }
  // collection: 'agentes' // para forzar un nombre en concreto en la base de datos
 });
 
@@ -20,14 +21,18 @@ anuncioSchema.statics.listaSimple = function() {
   return query.exec();
 }
 
-anuncioSchema.statics.lista = function(filtro, skip, limit, sort, fields) {
+anuncioSchema.statics.lista = function(filtro, start, limit, sort, fields ) {
   const query = Anuncio.find(filtro); // devuelve un objeto de tipo query que es un thenable
-  //const query = Anuncio.find({precio: { '$gte': '1000' }});
-  console.log(filtro);
-  query.skip(skip);
+  console.log(start);
+  query.skip(start);
   query.limit(limit);
   query.sort(sort);
   query.select(fields);
+  return query.exec();
+}
+
+anuncioSchema.statics.listaTags = function() {
+  const query = Anuncio.find().distinct('tags');
   return query.exec();
 }
 

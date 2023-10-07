@@ -16,3 +16,11 @@ Load initial data:
 # this command deletes all the data in the database and create default data
 $ npm run init-db
 ```
+
+
+
+http://127.0.0.1:3000/images/ps5.jpg
+
+http://127.0.0.1:3000/api/anuncios/tags
+
+http://127.0.0.1:3000/api/api-doc/
