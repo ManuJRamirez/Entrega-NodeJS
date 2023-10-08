@@ -2,8 +2,6 @@ const express = require('express');
 const router = express.Router();
 const Anuncio = require('../../models/Anuncio');
 
-// GET /api/agentes
-// Devuelve una lista de agentes
 
 /**
  * @swagger
@@ -14,6 +12,78 @@ const Anuncio = require('../../models/Anuncio');
  *        200:
  *          description: Devuelve JSON con todos los anuncios
  */
+
+
+/**
+ * @swagger
+ * /api/anuncios/tags:
+ *  get:
+ *      description: Devuelve
+ *      responses:
+ *        200:
+ *          description: Devuelve JSON con todos los tags
+ */
+
+/**
+ * @swagger
+ * /images/{foto}:
+ *  get:
+ *      description: 
+ *      parameters:
+ *        - in: path
+ *          name: foto
+ *          required: true
+ *          type: string
+ *      responses:
+ *        200:
+ *          description: Devuelve la imagen del anuncio
+*/
+
+/**
+ * @swagger
+ * /api/anuncios:
+ *  post:
+ *    requestBody:
+ *      description: Creación de un anuncio
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            required:
+ *              - nombre
+ *              - venta
+ *              - precio
+ *              - foto
+ *              - tags
+ *            properties:
+ *              nombre:
+ *                type: string
+ *                description: Título del anuncio
+ *                example: "nombre_artículo"
+ *              venta:
+ *                type: boolean
+ *                description: Si es venta o busqueda
+ *                example: true or false
+ *              precio:
+ *                type: number 
+ *                description: Precio del artículo
+ *              foto:
+ *                type: string
+ *                description: Foto del artículo
+ *                example: nombre.jpg
+ *              tags:
+ *                description: Tags del artículo
+ *                example: ["tag_1", "tag_2"]
+ *                schema:
+ *                  type: array
+ *                  items: 
+ *                    type: string
+ *                  
+ *    responses:
+ *      200:
+ *        description: Anuncio creado
+ */
+
 
 
 router.get('/', async (req, res, next) =>{
@@ -64,7 +134,6 @@ router.get('/', async (req, res, next) =>{
     const anuncios = await Anuncio.lista(filtro, start, limit, sort, fields);
     res.locals.anuncios = anuncios; 
     res.json( {result: anuncios});
-    res.render('index', { title: 'NodePoP' });
     
   } catch (error) {
       next(error);
